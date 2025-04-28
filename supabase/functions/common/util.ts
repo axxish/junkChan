@@ -1,5 +1,5 @@
 import { corsHeaders } from "./cors.ts";
-import { createClient, SupabaseClient } from "jsr:@supabase/supabase-js";
+import { createClient, SupabaseClient } from "jsr:@supabase/supabase-js@2";
 import { Database } from "../common/database.types.ts";
 
 // Custom error class for HTTP errors
