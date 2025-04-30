@@ -39,18 +39,19 @@ async function deleteBoardEntry(
 ): Promise<void> {
   console.log(`Attempting to delete board: ${boardId}`);
 
-  const { error: deleteError, count } = await supabaseServiceClient
+  const { error: deleteError, data } = await supabaseServiceClient
     .from("boards")
     .delete()
     .eq("id", boardId)
-    .select("id", { count: "exact" });
+    .select("id");
 
+  console.log(data);
   if (deleteError) {
     console.error("Database delete error:", deleteError);
     throw new HttpError("Failed to delete board due to a database error.", 500);
   }
 
-  if (!count) {
+  if (!data || data.length === 0) {
     throw new HttpError("Board not found.", 404);
   }
 
@@ -112,14 +113,3 @@ Deno.serve(async (req: Request) => {
   }
 });
 
-/* To invoke locally:
-
-  1. Run `supabase start`
-  2. Make an HTTP request:
-
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/delete-board' \
-    --header 'Authorization: Bearer <JWT>' \
-    --header 'Content-Type: application/json' \
-    --data '{"id": "uuid-of-board-to-delete"}'
-
-*/
